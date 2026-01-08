@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kmbeast.mapper.FeedbackMapper">
+
+    <resultMap id="BaseResultMap" type="com.kmbeast.pojo.vo.FeedbackVO">
+        <id column="work_order_id" property="workOrderId"/>
+        <result column="user_id" property="userId"/>
+        <result column="house_id" property="houseId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="feedback_type" property="feedbackType"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="contact_info" property="contactInfo"/>
+        <result column="status" property="status"/>
+        <result column="priority" property="priority"/>
+        <result column="assigned_to" property="assignedTo"/>
+        <result column="admin_reply" property="adminReply"/>
+        <result column="reply_time" property="replyTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="username" property="username"/>
+        <result column="avatar" property="avatar"/>
+        <result column="house_title" property="houseTitle"/>
+        <result column="assigned_to_name" property="assignedToName"/>
+    </resultMap>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT f.work_order_id,
+        f.user_id,
+        f.house_id,
+        f.order_id,
+        f.feedback_type,
+        f.title,
+        f.content,
+        f.contact_info,
+        f.status,
+        f.priority,
+        f.assigned_to,
+        f.admin_reply,
+        f.reply_time,
+        f.create_time,
+        f.update_time,
+        u.username,
+        u.avatar,
+        h.name AS house_title,
+        au.username AS assigned_to_name
+        FROM feedback f
+        LEFT JOIN user u ON u.id = f.user_id
+        LEFT JOIN house h ON h.id = f.house_id
+        LEFT JOIN user au ON au.id = f.assigned_to
+        <where>
+            <if test="workOrderId != null and workOrderId != ''">
+                AND f.work_order_id LIKE CONCAT('%', #{workOrderId}, '%')
+            </if>
+            <if test="userId != null">
+                AND f.user_id = #{userId}
+            </if>
+            <if test="houseId != null">
+                AND f.house_id = #{houseId}
+            </if>
+            <if test="orderId != null">
+                AND f.order_id = #{orderId}
+            </if>
+            <if test="feedbackType != null and feedbackType != ''">
+                AND f.feedback_type = #{feedbackType}
+            </if>
+            <if test="title != null and title != ''">
+                AND f.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND f.status = #{status}
+            </if>
+            <if test="priority != null and priority != ''">
+                AND f.priority = #{priority}
+            </if>
+            <if test="assignedTo != null">
+                AND f.assigned_to = #{assignedTo}
+            </if>
+            <if test="createTimeStart != null">
+                AND f.create_time >= #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null">
+                AND f.create_time &lt;= #{createTimeEnd}
+            </if>
+            <if test="houseIds != null and houseIds.size>0">
+                AND f.house_id IN
+                <foreach collection="houseIds" item="houseId" separator="," open="(" close=")" index="index">
+                    #{houseId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="listCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM feedback f
+        <where>
+            <if test="workOrderId != null and workOrderId != ''">
+                AND f.work_order_id LIKE CONCAT('%', #{workOrderId}, '%')
+            </if>
+            <if test="userId != null">
+                AND f.user_id = #{userId}
+            </if>
+            <if test="houseId != null">
+                AND f.house_id = #{houseId}
+            </if>
+            <if test="orderId != null">
+                AND f.order_id = #{orderId}
+            </if>
+            <if test="feedbackType != null and feedbackType != ''">
+                AND f.feedback_type = #{feedbackType}
+            </if>
+            <if test="title != null and title != ''">
+                AND f.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND f.status = #{status}
+            </if>
+            <if test="priority != null and priority != ''">
+                AND f.priority = #{priority}
+            </if>
+            <if test="assignedTo != null">
+                AND f.assigned_to = #{assignedTo}
+            </if>
+            <if test="createTimeStart != null">
+                AND f.create_time >= #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null">
+                AND f.create_time &lt;= #{createTimeEnd}
+            </if>
+            <if test="houseIds != null and houseIds.size>0">
+                AND f.house_id IN
+                <foreach collection="houseIds" item="houseId" separator="," open="(" close=")" index="index">
+                    #{houseId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listByUserId" resultMap="BaseResultMap">
+        SELECT f.work_order_id,
+        f.user_id,
+        f.house_id,
+        f.order_id,
+        f.feedback_type,
+        f.title,
+        f.content,
+        f.contact_info,
+        f.status,
+        f.priority,
+        f.assigned_to,
+        f.admin_reply,
+        f.reply_time,
+        f.create_time,
+        f.update_time,
+        u.username,
+        u.avatar,
+        h.name AS house_title,
+        au.username AS assigned_to_name
+        FROM feedback f
+        LEFT JOIN user u ON u.id = f.user_id
+        LEFT JOIN house h ON h.id = f.house_id
+        LEFT JOIN user au ON au.id = f.assigned_to
+        WHERE f.user_id = #{userId}
+        ORDER BY f.create_time DESC
+    </select>
+
+    <select id="listByAssignedTo" resultMap="BaseResultMap">
+        SELECT f.work_order_id,
+        f.user_id,
+        f.house_id,
+        f.order_id,
+        f.feedback_type,
+        f.title,
+        f.content,
+        f.contact_info,
+        f.status,
+        f.priority,
+        f.assigned_to,
+        f.admin_reply,
+        f.reply_time,
+        f.create_time,
+        f.update_time,
+        u.username,
+        u.avatar,
+        h.name AS house_title,
+        au.username AS assigned_to_name
+        FROM feedback f
+        LEFT JOIN user u ON u.id = f.user_id
+        LEFT JOIN house h ON h.id = f.house_id
+        LEFT JOIN user au ON au.id = f.assigned_to
+        WHERE f.assigned_to = #{assignedTo}
+        ORDER BY f.create_time DESC
+    </select>
+
+    <select id="generateWorkOrderId" resultType="java.lang.String">
+        SELECT CONCAT('FB', DATE_FORMAT(NOW(), '%Y%m%d'),
+               LPAD(IFNULL(MAX(CAST(SUBSTRING(work_order_id, 12) AS UNSIGNED)), 0) + 1, 6, '0')) AS work_order_id
+        FROM feedback
+        WHERE work_order_id LIKE CONCAT('FB', DATE_FORMAT(NOW(), '%Y%m%d'), '%')
+    </select>
+
+</mapper>
