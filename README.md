@@ -6,11 +6,15 @@
 
 【【原创精品】房屋租赁系统，基于SpringBoot+Vue实现，手把手带敲，功能强大，界面美观，集成协同过滤算法及评论敏感词替换算法】https://www.bilibili.com/video/BV1n4gHz6E1X?vd_source=80a298d359396b53633403edf7839b3b
 
+### 3D看房演示
+
+![3D看房演示](docs/3d-viewing-demo.gif)
+
 ### 本地部署方式
 
 #### 前端
 
-① vscode打开view文件夹
+① VS Code打开`view`文件夹
 
 ② 如果没有安装依赖，运行
 
@@ -28,13 +32,13 @@ npm run dev
 
 ⑤ 关闭前端
 
-终端处Ctrl+C即可结束前端运行
+终端处`Ctrl+C`即可结束前端运行
 
 #### 数据库
 
-Navicat新建连接（MySQL)
+Navicat新建连接（MySQL）
 
-新建数据库house-rental
+新建数据库`house-rental`
 
 运行SQL文件
 
@@ -42,7 +46,11 @@ Navicat新建连接（MySQL)
 
 ① 修改文件连接MySQL处的用户密码
 
-application.yml文件resource -> application.yml
+`application.yml`文件路径：
+
+```text
+api/src/main/resources/application.yml
+```
 
 ```
 username: root
@@ -58,8 +66,3 @@ password: 123456
 填写密码和所需要的数据库名，测试连接，成功连接后，点“应用”、“确定”
 
 ③ 运行`HouseRentalApplication`，开启后端
-
-
-
-
-
